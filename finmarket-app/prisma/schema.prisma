@@ -1,0 +1,110 @@
+// FinMarket TJ — модель данных (раздел 11 ТЗ). SQLite для нулевой установки.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Bank {
+  id            String      @id @default(uuid())
+  name          String
+  logoText      String      // инициалы для лого-заглушки
+  licenseNo     String
+  verified      Boolean     @default(true)
+  status        String      @default("active") // active | inactive
+  webhookUrl    String?
+  routingEmail  String?
+  webhookSecret String?
+  products      Product[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model ProductCategory {
+  id        String    @id @default(uuid())
+  code      String    @unique // credit | deposit | debit_card | credit_card | mortgage | microloan | rko | insurance
+  nameTj    String
+  nameRu    String
+  sortOrder Int       @default(0)
+  products  Product[]
+}
+
+model Product {
+  id            String          @id @default(uuid())
+  bankId        String
+  bank          Bank            @relation(fields: [bankId], references: [id])
+  categoryId    String
+  category      ProductCategory @relation(fields: [categoryId], references: [id])
+  name          String
+  currency      String          @default("TJS") // TJS | USD | EUR
+  rateMin       Float?
+  rateMax       Float?
+  effectiveRate Float?
+  amountMin     Float?
+  amountMax     Float?
+  termMin       Int?
+  termMax       Int?
+  feesJson      String          @default("{\"items\":[]}")     // см. fees.schema.json
+  requirementsJson String       @default("{}")                  // см. requirements.schema.json
+  attributesJson String         @default("[]")                  // [{key,value,isComparable}]
+  status        String          @default("draft") // draft | published
+  publishedAt   DateTime?
+  updatedAt     DateTime        @updatedAt
+  applications  Application[]
+}
+
+model Application {
+  id           String            @id @default(uuid())
+  productId    String
+  product      Product           @relation(fields: [productId], references: [id])
+  fullName     String
+  phone        String
+  email        String?
+  consentPdn   Boolean           @default(false)
+  consentVersion String          @default("v1")
+  status       String            @default("new") // new | sent | failed | processed
+  source       String            @default("web")
+  createdAt    DateTime          @default(now())
+  deliveries   LeadDeliveryLog[]
+}
+
+model LeadDeliveryLog {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id])
+  channel       String      // webhook | email
+  attemptNo     Int
+  httpStatus    Int?
+  deliveredAt   DateTime?
+  error         String?
+  createdAt     DateTime    @default(now())
+}
+
+model AdminUser {
+  id       String  @id @default(uuid())
+  email    String  @unique
+  password String  // демо: хранится как есть; в проде — хэш + Keycloak
+  role     String  @default("viewer") // admin | editor | viewer
+  status   String  @default("active")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorEmail String
+  entityType String
+  entityId   String
+  action     String   // create | update | delete | publish
+  diffJson   String   @default("{}")
+  createdAt  DateTime @default(now())
+}
+
+model IdempotencyKey {
+  key         String   @id
+  requestHash String
+  responseJson String
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+}
