@@ -4,8 +4,9 @@ import Link from "next/link";
 import Header from "@/components/Header";
 
 export const metadata: Metadata = {
-  title: "ФинМаркет — маркетплейс банковских продуктов Таджикистана",
+  title: "Banki.tj — маркетплейс банковских продуктов Таджикистана",
   description: "Каталог, сравнение и онлайн-заявки на кредиты, депозиты, карты и ипотеку банков Таджикистана",
+  icons: { icon: "/icon.svg" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -17,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer style={{ background: "var(--brand-deep)", color: "#cdddf0", marginTop: 40 }}>
           <div className="container" style={{ padding: "40px 20px", display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1fr", gap: 28 }}>
             <div>
-              <div style={{ fontWeight: 800, fontSize: 18, color: "#fff", marginBottom: 10 }}>Фин<span style={{ color: "var(--brand2)" }}>Маркет</span></div>
+              <div style={{ fontWeight: 800, fontSize: 20, color: "#fff", marginBottom: 10 }}>Banki<span style={{ color: "var(--brand2)" }}>.tj</span></div>
               <p style={{ fontSize: 13, lineHeight: 1.5, opacity: .8 }}>Финансовый маркетплейс банковских продуктов Таджикистана. Сравнение и онлайн-заявки.</p>
             </div>
             <div>

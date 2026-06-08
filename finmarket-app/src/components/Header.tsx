@@ -19,10 +19,9 @@ export default function Header() {
     <header style={{ position: "sticky", top: 0, zIndex: 50, background: "#fff", borderBottom: "1px solid var(--line)", boxShadow: "0 1px 8px rgba(14,39,71,.04)" }}>
       <div className="container" style={{ display: "flex", alignItems: "center", gap: 22, padding: "14px 20px" }}>
         {/* Логотип */}
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 9 }}>
-          <span style={{ width: 34, height: 34, borderRadius: 9, background: "linear-gradient(135deg,var(--brand),var(--brand2))", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 800, fontSize: 17 }}>Ф</span>
-          <span style={{ fontWeight: 800, fontSize: 19, color: "var(--brand)" }}>Фин<span style={{ color: "var(--brand2)" }}>Маркет</span></span>
-        </Link>
+       <Link href="/" style={{ display: "flex", alignItems: "center" }}>
+          <img src="/logo.svg" alt="Banki.tj" style={{ height: 40 }} />
+           </Link>
 
         {/* Навигация по продуктам */}
         <nav style={{ display: "flex", gap: 20, fontSize: 14, marginLeft: 6, fontWeight: 500 }} className="hide-mobile">
