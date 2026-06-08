@@ -2,36 +2,58 @@
 import Link from "next/link";
 import { useCompare, useLang } from "@/lib/store";
 
+const NAV = [
+  { href: "/catalog/credit", label: "Кредиты" },
+  { href: "/catalog/deposit", label: "Депозиты" },
+  { href: "/catalog/debit_card", label: "Карты" },
+  { href: "/catalog/mortgage", label: "Ипотека" },
+  { href: "/catalog/microloan", label: "Микрозаймы" },
+  { href: "/catalog/insurance", label: "Страхование" },
+];
+
 export default function Header() {
   const { lang, setLang } = useLang();
   const compareCount = useCompare((s) => s.ids.length);
 
   return (
-    <header style={{ position: "sticky", top: 0, zIndex: 50, background: "rgba(15,22,35,.92)", backdropFilter: "blur(8px)", borderBottom: "1px solid var(--line)" }}>
-      <div className="container" style={{ display: "flex", alignItems: "center", gap: 18, padding: "14px 20px" }}>
-        <Link href="/" style={{ fontWeight: 800, fontSize: 19, letterSpacing: .3 }}>
-          Fin<span style={{ color: "var(--brand)" }}>Market</span> <span className="muted" style={{ fontSize: 12 }}>TJ</span>
+    <header style={{ position: "sticky", top: 0, zIndex: 50, background: "#fff", borderBottom: "1px solid var(--line)", boxShadow: "0 1px 8px rgba(14,39,71,.04)" }}>
+      <div className="container" style={{ display: "flex", alignItems: "center", gap: 22, padding: "14px 20px" }}>
+        {/* Логотип */}
+        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 9 }}>
+          <span style={{ width: 34, height: 34, borderRadius: 9, background: "linear-gradient(135deg,var(--brand),var(--brand2))", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 800, fontSize: 17 }}>Ф</span>
+          <span style={{ fontWeight: 800, fontSize: 19, color: "var(--brand)" }}>Фин<span style={{ color: "var(--brand2)" }}>Маркет</span></span>
         </Link>
-        <nav style={{ display: "flex", gap: 16, fontSize: 14, marginLeft: 8 }} className="muted">
-          <Link href="/catalog/credit">Кредиты</Link>
-          <Link href="/catalog/deposit">Депозиты</Link>
-          <Link href="/catalog/mortgage">Ипотека</Link>
+
+        {/* Навигация по продуктам */}
+        <nav style={{ display: "flex", gap: 20, fontSize: 14, marginLeft: 6, fontWeight: 500 }} className="hide-mobile">
+          {NAV.map((n) => (
+            <Link key={n.href} href={n.href} style={{ color: "var(--ink)", paddingBottom: 2, borderBottom: "2px solid transparent", transition: ".15s" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--brand)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ink)")}>
+              {n.label}
+            </Link>
+          ))}
         </nav>
+
+        {/* Правый блок */}
         <div style={{ marginLeft: "auto", display: "flex", gap: 10, alignItems: "center" }}>
-          <Link href="/compare" className="btn ghost sm">
-            Сравнение{compareCount ? ` (${compareCount})` : ""}
+          <Link href="/compare" className="btn ghost sm" style={{ position: "relative" }}>
+            ⇄ Сравнение
+            {compareCount > 0 && <span style={{ position: "absolute", top: -7, right: -7, background: "var(--brand2)", color: "#fff", borderRadius: "50%", width: 19, height: 19, fontSize: 11, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 }}>{compareCount}</span>}
           </Link>
-          <Link href="/admin" className="btn ghost sm">Админ</Link>
-          <div style={{ display: "flex", gap: 4 }}>
+          <Link href="/admin" className="btn ghost sm hide-mobile">Кабинет банка</Link>
+          <div style={{ display: "flex", gap: 3, background: "var(--bg2)", padding: 3, borderRadius: 9 }}>
             {(["ru", "tj"] as const).map((l) => (
-              <button key={l} onClick={() => setLang(l)} className="btn sm"
-                style={{ background: lang === l ? "var(--brand)" : "transparent", border: "1px solid var(--line)", color: lang === l ? "#fff" : "var(--muted)" }}>
+              <button key={l} onClick={() => setLang(l)}
+                style={{ padding: "5px 11px", fontSize: 12, fontWeight: 700, borderRadius: 7, border: "none", cursor: "pointer",
+                  background: lang === l ? "var(--brand)" : "transparent", color: lang === l ? "#fff" : "var(--muted)" }}>
                 {l.toUpperCase()}
               </button>
             ))}
           </div>
         </div>
       </div>
+      <style>{`@media(max-width:900px){.hide-mobile{display:none!important}}`}</style>
     </header>
   );
 }

@@ -19,7 +19,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     <div className="fade" style={{ maxWidth: 720 }}>
       <div className="card" style={{ padding: 24 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-          <div style={{ width: 38, height: 38, borderRadius: 9, background: "var(--line)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 12 }} className="muted">{p.bank.logoText}</div>
+          <div style={{ width: 38, height: 38, borderRadius: 9, background: "var(--bg2)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 12, color: "var(--brand)" }}>{p.bank.logoText}</div>
           <b>{p.bank.name}</b>
           {p.bank.verified && <span className="badge verified">✓ Лицензия №{p.bank.license_no}</span>}
         </div>

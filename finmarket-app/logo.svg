@@ -1,0 +1,17 @@
+<svg width="200" height="48" viewBox="0 0 200 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="lg" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0a4d8c"/>
+      <stop offset="1" stop-color="#16b3b9"/>
+    </linearGradient>
+  </defs>
+  <!-- знак -->
+  <rect x="2" y="2" width="44" height="44" rx="11" fill="url(#lg)"/>
+  <path d="M24 11l11 7H13l11-7Z" fill="#fff"/>
+  <rect x="15.5" y="20.5" width="3.2" height="10.5" rx="0.8" fill="#fff"/>
+  <rect x="22.4" y="20.5" width="3.2" height="10.5" rx="0.8" fill="#fff"/>
+  <rect x="29.3" y="20.5" width="3.2" height="10.5" rx="0.8" fill="#fff"/>
+  <rect x="13" y="33" width="22" height="3.2" rx="1" fill="#fff"/>
+  <!-- текст: Banki.tj -->
+  <text x="56" y="32" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="24" font-weight="800" fill="#0a4d8c">Banki<tspan fill="#16b3b9">.tj</tspan></text>
+</svg>

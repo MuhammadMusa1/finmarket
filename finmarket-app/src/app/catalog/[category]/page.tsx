@@ -77,7 +77,7 @@ export default function CatalogPage({ params }: { params: { category: string } }
             products.map((p) => (
               <div key={p.id} className="card" style={{ padding: 18, marginBottom: 12 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-                  <div style={{ width: 34, height: 34, borderRadius: 8, background: "var(--line)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700 }} className="muted">{p.bank.logoText}</div>
+                  <div style={{ width: 34, height: 34, borderRadius: 8, background: "var(--bg2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "var(--brand)" }}>{p.bank.logoText}</div>
                   <b>{p.bank.name}</b>
                   {p.bank.verified && <span className="badge verified">✓ Лицензия</span>}
                 </div>
