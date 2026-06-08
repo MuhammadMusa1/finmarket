@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useLang, DICT } from "@/lib/store";
 
 type Cat = { id: string; code: string; name_ru: string; name_tj: string };
 type Product = {
@@ -18,6 +19,7 @@ export default function Home() {
   const [cats, setCats] = useState<Cat[]>([]);
   const [top, setTop] = useState<Product[]>([]);
   const [calc, setCalc] = useState({ amount: 50000, term: 24 });
+  const { lang } = useLang();
 
   useEffect(() => {
     fetch("/api/categories").then((r) => r.json()).then(setCats);
@@ -30,21 +32,41 @@ export default function Home() {
     return isFinite(m) ? Math.round(m) : 0;
   })();
 
+  const news = lang === "ru" ? [
+    ["Нацбанк сохранил ставку рефинансирования", "сегодня"],
+    ["Эсхата запустил новый депозит с повышенной ставкой", "вчера"],
+    ["Курс сомони к доллару на 8 июня", "2 дня назад"],
+  ] : [
+    ["Бонки миллӣ меъёри бозтамвилро тағйир надод", "имрӯз"],
+    ["Эсхата пасандози навро бо меъёри баландтар ба кор андохт", "дирӯз"],
+    ["Қурби сомонӣ нисбат ба доллар барои 8 июн", "2 рӯз пеш"],
+  ];
+
   return (
     <div className="fade" style={{ display: "flex", flexDirection: "column", gap: 44 }}>
       <section style={{ background: "linear-gradient(120deg,var(--hero-from),var(--hero-to))", borderRadius: 24, padding: "48px 44px", color: "#fff", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", right: -60, top: -60, width: 280, height: 280, borderRadius: "50%", background: "rgba(255,255,255,.08)" }} />
         <div style={{ position: "absolute", right: 80, bottom: -90, width: 220, height: 220, borderRadius: "50%", background: "rgba(255,255,255,.06)" }} />
         <div style={{ maxWidth: 620, position: "relative" }}>
-          <span style={{ background: "rgba(255,255,255,.18)", padding: "5px 13px", borderRadius: 20, fontSize: 13, fontWeight: 600 }}>Финансовый маркетплейс Таджикистана</span>
-          <h1 style={{ fontSize: 40, fontWeight: 800, lineHeight: 1.15, margin: "18px 0 12px" }}>Выберите лучший банковский продукт за минуту</h1>
-          <p style={{ fontSize: 17, opacity: .92, marginBottom: 26, lineHeight: 1.5 }}>Сравнивайте кредиты, депозиты, карты и ипотеку от банков Таджикистана. Подавайте заявку онлайн — без визита в отделение.</p>
+          <span style={{ background: "rgba(255,255,255,.18)", padding: "5px 13px", borderRadius: 20, fontSize: 13, fontWeight: 600 }}>
+            {lang === "ru" ? "Финансовый маркетплейс Таджикистана" : "Маркетплейси молиявии Тоҷикистон"}
+          </span>
+          <h1 style={{ fontSize: 40, fontWeight: 800, lineHeight: 1.15, margin: "18px 0 12px" }}>
+            {lang === "ru" ? "Выберите лучший банковский продукт за минуту" : "Маҳсулоти беҳтарини бонкиро дар як дақиқа интихоб кунед"}
+          </h1>
+          <p style={{ fontSize: 17, opacity: .92, marginBottom: 26, lineHeight: 1.5 }}>
+            {lang === "ru" ? "Сравнивайте кредиты, депозиты, карты и ипотеку от банков Таджикистана. Подавайте заявку онлайн — без визита в отделение." : "Қарзҳо, пасандозҳо, кортҳо ва ипотекаро аз бонкҳои Тоҷикистон муқоиса кунед. Дархостро онлайн пешниҳод кунед — бе ташриф ба филиал."}
+          </p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            <Link href="/catalog/credit" className="btn teal" style={{ fontSize: 15, padding: "13px 26px" }}>Подобрать кредит</Link>
-            <Link href="/catalog/deposit" className="btn" style={{ background: "rgba(255,255,255,.16)", fontSize: 15, padding: "13px 26px" }}>Открыть вклад</Link>
+            <Link href="/catalog/credit" className="btn teal" style={{ fontSize: 15, padding: "13px 26px" }}>
+              {lang === "ru" ? "Подобрать кредит" : "Интихоби қарз"}
+            </Link>
+            <Link href="/catalog/deposit" className="btn" style={{ background: "rgba(255,255,255,.16)", fontSize: 15, padding: "13px 26px" }}>
+              {lang === "ru" ? "Открыть вклад" : "Кушодани пасандоз"}
+            </Link>
           </div>
           <div style={{ display: "flex", gap: 32, marginTop: 34 }}>
-            {[["5+", "банков-партнёров"], ["50+", "продуктов"], ["2 мин", "на заявку"]].map(([n, l]) => (
+            {(lang === "ru" ? [["5+", "банков-партнёров"], ["50+", "продуктов"], ["2 мин", "на заявку"]] : [["5+", "бонкҳои шарик"], ["50+", "маҳсулот"], ["2 дақ", "барои дархост"]]).map(([n, l]) => (
               <div key={l}><div style={{ fontSize: 26, fontWeight: 800 }}>{n}</div><div style={{ fontSize: 13, opacity: .85 }}>{l}</div></div>
             ))}
           </div>
@@ -52,13 +74,14 @@ export default function Home() {
       </section>
 
       <section>
-        <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 18 }}>Все продукты</h2>
+        <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 18 }}>
+          {lang === "ru" ? "Все продукты" : "Ҳамаи маҳсулот"}
+        </h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))", gap: 14 }}>
           {cats.map((c) => (
             <Link key={c.id} href={`/catalog/${c.code}`} className="card hover" style={{ padding: "22px 18px", textAlign: "center" }}>
               <div style={{ fontSize: 34, marginBottom: 10 }}>{CAT_ICON[c.code] || "•"}</div>
-              <h3 style={{ fontSize: 15, fontWeight: 700 }}>{c.name_ru}</h3>
-              <p className="muted" style={{ fontSize: 12, marginTop: 3 }}>{c.name_tj}</p>
+              <h3 style={{ fontSize: 15, fontWeight: 700 }}>{lang === "ru" ? c.name_ru : c.name_tj}</h3>
             </Link>
           ))}
         </div>
@@ -66,8 +89,12 @@ export default function Home() {
 
       <section>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800 }}>Выгодные предложения</h2>
-          <Link href="/catalog/credit" className="muted" style={{ fontSize: 14, fontWeight: 600 }}>Все предложения →</Link>
+          <h2 style={{ fontSize: 24, fontWeight: 800 }}>
+            {lang === "ru" ? "Выгодные предложения" : "Пешниҳодҳои муфид"}
+          </h2>
+          <Link href="/catalog/credit" className="muted" style={{ fontSize: 14, fontWeight: 600 }}>
+            {lang === "ru" ? "Все предложения →" : "Ҳамаи пешниҳодҳо →"}
+          </Link>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(260px,1fr))", gap: 16 }}>
           {top.map((p) => (
@@ -79,10 +106,12 @@ export default function Home() {
               <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 12, minHeight: 42 }}>{p.name}</h3>
               <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 4 }}>
                 <span style={{ fontSize: 30, fontWeight: 800, color: "var(--brand)" }}>{p.effective_rate ?? "—"}%</span>
-                <span className="muted" style={{ fontSize: 13 }}>ставка</span>
+                <span className="muted" style={{ fontSize: 13 }}>{DICT[lang].effRate.toLowerCase()}</span>
               </div>
-              <p className="muted" style={{ fontSize: 13, marginBottom: 14 }}>до {p.amount_max ? p.amount_max.toLocaleString() : "—"} {p.currency}{p.term_max ? ` · до ${p.term_max} мес` : ""}</p>
-              <Link href={`/apply/${p.id}`} className="btn" style={{ width: "100%", textAlign: "center", display: "block" }}>Подать заявку</Link>
+              <p className="muted" style={{ fontSize: 13, marginBottom: 14 }}>
+                {lang === "ru" ? "до" : "то"} {p.amount_max ? p.amount_max.toLocaleString() : "—"} {p.currency}{p.term_max ? ` · ${lang === "ru" ? "до" : "то"} ${p.term_max} ${lang === "ru" ? "мес" : "моҳ"}` : ""}
+              </p>
+              <Link href={`/apply/${p.id}`} className="btn" style={{ width: "100%", textAlign: "center", display: "block" }}>{DICT[lang].apply}</Link>
             </div>
           ))}
         </div>
@@ -90,33 +119,38 @@ export default function Home() {
 
       <section style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 20 }} className="calc-grid">
         <div className="card" style={{ padding: 28 }}>
-          <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 4 }}>Рассчитайте платёж по кредиту</h2>
-          <p className="muted" style={{ fontSize: 14, marginBottom: 20 }}>Предварительный расчёт по ставке 15% годовых</p>
+          <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 4 }}>
+            {lang === "ru" ? "Рассчитайте платёж по кредиту" : "Пардохти қарзро ҳисоб кунед"}
+          </h2>
+          <p className="muted" style={{ fontSize: 14, marginBottom: 20 }}>
+            {lang === "ru" ? "Предварительный расчёт по ставке 15% годовых" : "Ҳисобкунии пешакӣ бо меъёри 15% солона"}
+          </p>
           <div style={{ display: "flex", gap: 18, flexWrap: "wrap", alignItems: "flex-end" }}>
             <div style={{ flex: 1, minWidth: 160 }}>
-              <label className="label">Сумма кредита, TJS</label>
+              <label className="label">{lang === "ru" ? "Сумма кредита, TJS" : "Маблағи қарз, TJS"}</label>
               <input className="input" type="number" value={calc.amount} onChange={(e) => setCalc({ ...calc, amount: Number(e.target.value) })} />
               <input type="range" min={5000} max={500000} step={5000} value={calc.amount} onChange={(e) => setCalc({ ...calc, amount: Number(e.target.value) })} style={{ width: "100%", marginTop: 10, accentColor: "var(--brand)" }} />
             </div>
             <div style={{ flex: 1, minWidth: 160 }}>
-              <label className="label">Срок, месяцев</label>
+              <label className="label">{lang === "ru" ? "Срок, месяцев" : "Мӯҳлат, моҳҳо"}</label>
               <input className="input" type="number" value={calc.term} onChange={(e) => setCalc({ ...calc, term: Number(e.target.value) })} />
               <input type="range" min={3} max={60} step={1} value={calc.term} onChange={(e) => setCalc({ ...calc, term: Number(e.target.value) })} style={{ width: "100%", marginTop: 10, accentColor: "var(--brand)" }} />
             </div>
           </div>
           <div style={{ marginTop: 22, background: "linear-gradient(120deg,var(--hero-from),var(--hero-to))", borderRadius: 14, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-            <div><div style={{ fontSize: 13, opacity: .85 }}>Ежемесячный платёж</div><div style={{ fontSize: 30, fontWeight: 800 }}>{monthly.toLocaleString()} TJS</div></div>
-            <Link href="/catalog/credit" className="btn teal">Подобрать кредит</Link>
+            <div>
+              <div style={{ fontSize: 13, opacity: .85 }}>{lang === "ru" ? "Ежемесячный платёж" : "Пардохти моҳона"}</div>
+              <div style={{ fontSize: 30, fontWeight: 800 }}>{monthly.toLocaleString()} TJS</div>
+            </div>
+            <Link href="/catalog/credit" className="btn teal">{lang === "ru" ? "Подобрать кредит" : "Интихоби қарз"}</Link>
           </div>
         </div>
 
         <div className="card" style={{ padding: 28 }}>
-          <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 18 }}>Финансовые новости</h2>
-          {[
-            ["Нацбанк сохранил ставку рефинансирования", "сегодня"],
-            ["Эсхата запустил новый депозит с повышенной ставкой", "вчера"],
-            ["Курс сомони к доллару на 8 июня", "2 дня назад"],
-          ].map(([title, date], i) => (
+          <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 18 }}>
+            {lang === "ru" ? "Финансовые новости" : "Хабарҳои молиявӣ"}
+          </h2>
+          {news.map(([title, date], i) => (
             <div key={i} style={{ paddingBottom: 14, marginBottom: 14, borderBottom: i < 2 ? "1px solid var(--line)" : "none" }}>
               <p style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.4 }}>{title}</p>
               <span className="muted" style={{ fontSize: 12 }}>{date}</span>
@@ -127,11 +161,15 @@ export default function Home() {
 
       <section style={{ background: "var(--bg2)", borderRadius: 20, padding: "32px 36px", display: "flex", gap: 36, flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ maxWidth: 460 }}>
-          <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>ФинМаркет — прозрачный выбор финансовых продуктов</h2>
-          <p className="muted" style={{ fontSize: 15, lineHeight: 1.5 }}>Только лицензированные банки и МФО Таджикистана. Актуальные ставки, честное сравнение, никаких скрытых комиссий.</p>
+          <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>
+            {lang === "ru" ? "ФинМаркет — прозрачный выбор финансовых продуктов" : "ФинМаркет — интихоби шаффофи маҳсулоти молиявӣ"}
+          </h2>
+          <p className="muted" style={{ fontSize: 15, lineHeight: 1.5 }}>
+            {lang === "ru" ? "Только лицензированные банки и МФО Таджикистана. Актуальные ставки, честное сравнение, никаких скрытых комиссий." : "Танҳо бонкҳо ва ТМФ-ҳои иҷозатномадори Тоҷикистон. Меъёрҳои муҳим, муқоисаи ростқавлона, бе комиссияҳои пинҳонӣ."}
+          </p>
         </div>
         <div style={{ display: "flex", gap: 28 }}>
-          {[["✓", "Лицензии ЦБ"], ["🔒", "Защита данных"], ["⚡", "Заявка за 2 мин"]].map(([ic, l]) => (
+          {(lang === "ru" ? [["✓", "Лицензии ЦБ"], ["🔒", "Защита данных"], ["⚡", "Заявка за 2 мин"]] : [["✓", "Иҷозатномаҳои БМТ"], ["🔒", "Ҳифзи маълумот"], ["⚡", "Дархост дар 2 дақ"]]).map(([ic, l]) => (
             <div key={l} style={{ textAlign: "center" }}>
               <div style={{ fontSize: 26 }}>{ic}</div>
               <div style={{ fontSize: 13, fontWeight: 600, marginTop: 6 }}>{l}</div>

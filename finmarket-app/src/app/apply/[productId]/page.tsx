@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { TJ_PHONE, normalizePhone } from "@/lib/validation";
+import { useLang, DICT } from "@/lib/store";
 
 export default function ApplyPage({ params }: { params: { productId: string } }) {
   const [product, setProduct] = useState<any>(null);
@@ -9,14 +10,23 @@ export default function ApplyPage({ params }: { params: { productId: string } })
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [done, setDone] = useState<{ id: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const { lang } = useLang();
 
-  useEffect(() => { fetch(`/api/products/${params.productId}`).then((r) => r.json()).then(setProduct).catch(() => {}); }, [params.productId]);
+  useEffect(() => {
+    fetch(`/api/products/${params.productId}`).then((r) => r.json()).then(setProduct).catch(() => {});
+  }, [params.productId]);
 
   const submit = async () => {
     const e: Record<string, string> = {};
-    if (form.full_name.trim().length < 2) e.full_name = "Укажите ФИО";
-    if (!TJ_PHONE.test(normalizePhone(form.phone))) e.phone = "Формат: +992XXYYYYYYY";
-    if (!form.consent) e.consent = "Согласие обязательно";
+    if (form.full_name.trim().length < 2) {
+      e.full_name = lang === "ru" ? "Укажите ФИО" : "Н.Ф.Ш.-ро нишон диҳед";
+    }
+    if (!TJ_PHONE.test(normalizePhone(form.phone))) {
+      e.phone = "Формат: +992XXYYYYYYY";
+    }
+    if (!form.consent) {
+      e.consent = lang === "ru" ? "Согласие обязательно" : "Розигӣ ҳатмӣ аст";
+    }
     setErrors(e);
     if (Object.keys(e).length) return;
 
@@ -32,37 +42,49 @@ export default function ApplyPage({ params }: { params: { productId: string } })
     setSubmitting(false);
     const d = await res.json();
     if (res.ok) setDone({ id: d.id });
-    else setErrors({ form: d.error?.message || "Ошибка отправки" });
+    else setErrors({ form: d.error?.message || (lang === "ru" ? "Ошибка отправки" : "Хатогии фиристодан") });
   };
 
   if (done) return (
     <div className="fade card" style={{ maxWidth: 460, margin: "20px auto", padding: 36, textAlign: "center" }}>
       <div style={{ width: 64, height: 64, borderRadius: "50%", background: "var(--brand2)", margin: "0 auto 16px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32, color: "#fff" }}>✓</div>
-      <h2 style={{ fontSize: 22, fontWeight: 800 }}>Заявка отправлена</h2>
-      <p className="muted" style={{ marginTop: 8 }}>{product?.bank?.name} получит вашу заявку и свяжется с вами.<br />Номер: <b>{done.id.slice(0, 8)}…</b></p>
-      <Link href="/" className="btn" style={{ marginTop: 18, display: "inline-block" }}>Вернуться в каталог</Link>
+      <h2 style={{ fontSize: 22, fontWeight: 800 }}>{lang === "ru" ? "Заявка отправлена" : "Дархост фиристода шуд"}</h2>
+      <p className="muted" style={{ marginTop: 8 }}>
+        {product?.bank?.name} {lang === "ru" ? "получит вашу заявку и свяжется с вами." : "дархости шуморо қабул карда, бо шумо тамос мегирад."}
+        <br />
+        {lang === "ru" ? "Номер:" : "Рақам:"} <b>{done.id.slice(0, 8)}…</b>
+      </p>
+      <Link href="/" className="btn" style={{ marginTop: 18, display: "inline-block" }}>{lang === "ru" ? "Вернуться в каталог" : "Бозгашт ба каталог"}</Link>
     </div>
   );
 
   return (
     <div className="fade" style={{ maxWidth: 460 }}>
-      <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 16 }}>Заявка</h1>
+      <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 16 }}>{lang === "ru" ? "Заявка" : "Дархост"}</h1>
       {product && <div className="card" style={{ padding: 16, marginBottom: 16 }}>
         <b>{product.bank?.name} · {product.name}</b>
-        <div className="muted" style={{ fontSize: 13 }}>Эфф. ставка {product.effective_rate}% · до {product.amount_max?.toLocaleString()} {product.currency}</div>
+        <div className="muted" style={{ fontSize: 13 }}>
+          {DICT[lang].effRate} {product.effective_rate}% · {lang === "ru" ? "до" : "то"} {product.amount_max?.toLocaleString()} {product.currency}
+        </div>
       </div>}
       {errors.form && <div style={{ color: "var(--danger)", marginBottom: 12 }}>{errors.form}</div>}
 
-      <Field label="ФИО" value={form.full_name} onChange={(v) => setForm({ ...form, full_name: v })} error={errors.full_name} />
-      <Field label="Телефон (РТ)" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} error={errors.phone} placeholder="+992 90 123 45 67" />
-      <Field label="Email (опционально)" value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
+      <Field label={lang === "ru" ? "ФИО" : "Н.Ф.Ш."} value={form.full_name} onChange={(v) => setForm({ ...form, full_name: v })} error={errors.full_name} />
+      <Field label={lang === "ru" ? "Телефон (РТ)" : "Телефон (ҶТ)"} value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} error={errors.phone} placeholder="+992 90 123 45 67" />
+      <Field label={lang === "ru" ? "Email (опционально)" : "Email (ихтиёрӣ)"} value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
 
       <label style={{ display: "flex", gap: 9, alignItems: "flex-start", fontSize: 13, background: "var(--card)", border: `1px solid ${errors.consent ? "var(--danger)" : "var(--line)"}`, padding: 12, borderRadius: 8, marginBottom: 14, cursor: "pointer" }} className="muted">
         <input type="checkbox" checked={form.consent} onChange={(e) => setForm({ ...form, consent: e.target.checked })} style={{ marginTop: 2 }} />
-        <span>Я даю согласие на обработку персональных данных и передачу их банку-партнёру (обязательно)</span>
+        <span>
+          {lang === "ru"
+            ? "Я даю согласие на обработку персональных данных и передачу их банку-партнёру (обязательно)"
+            : "Ман барои коркарди маълумоти шахсӣ ва интиқоли онҳо ба бонки шарик розигӣ медиҳам (ҳатмӣ)"}
+        </span>
       </label>
 
-      <button className="btn" style={{ width: "100%" }} onClick={submit} disabled={submitting}>{submitting ? "Отправка…" : "Отправить заявку"}</button>
+      <button className="btn" style={{ width: "100%" }} onClick={submit} disabled={submitting}>
+        {submitting ? (lang === "ru" ? "Отправка…" : "Фиристода истодааст…") : (lang === "ru" ? "Отправить заявку" : "Фиристодани дархост")}
+      </button>
     </div>
   );
 }
