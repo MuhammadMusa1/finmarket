@@ -25,6 +25,8 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           <div style={{ width: 38, height: 38, borderRadius: 9, background: "var(--bg2)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 12, color: "var(--brand)" }}>{p.bank.logoText}</div>
           <b>{p.bank.name}</b>
           {p.bank.verified && <span className="badge verified">✓ {lang === "ru" ? "Лицензия №" : "Иҷозатномаи №"}{p.bank.license_no}</span>}
+          {p.bank.is_partner && <span className="badge accent" style={{ marginLeft: 8 }}>{DICT[lang].partnerLabel}</span>}
+          {typeof p.bank.rating === "number" && p.bank.rating > 0 && <span className="badge" style={{ marginLeft: 8 }}>{p.bank.rating.toFixed(1)}★</span>}
         </div>
         <h1 style={{ fontSize: 26, fontWeight: 800, marginBottom: 14 }}>{p.name}</h1>
         <div style={{ display: "flex", gap: 28, flexWrap: "wrap", marginBottom: 18 }}>

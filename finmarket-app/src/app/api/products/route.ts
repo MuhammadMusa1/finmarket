@@ -34,12 +34,11 @@ export async function GET(req: Request) {
   if (search) where.name = { contains: search };
 
   const sort = q.get("sort");
-  const orderBy: any =
-    sort === "rate_asc" ? { effectiveRate: "asc" } :
-    sort === "rate_desc" ? { effectiveRate: "desc" } :
-    sort === "amount_desc" ? { amountMax: "desc" } :
-    sort === "term_desc" ? { termMax: "desc" } :
-    { effectiveRate: "asc" };
+  const orderBy: any[] =
+    sort === "rate_desc" ? [{ bank: { isPartner: "desc" } }, { bank: { priority: "desc" } }, { effectiveRate: "desc" }] :
+    sort === "amount_desc" ? [{ bank: { isPartner: "desc" } }, { bank: { priority: "desc" } }, { amountMax: "desc" }] :
+    sort === "term_desc" ? [{ bank: { isPartner: "desc" } }, { bank: { priority: "desc" } }, { termMax: "desc" }] :
+    [{ bank: { isPartner: "desc" } }, { bank: { priority: "desc" } }, { effectiveRate: "asc" }];
 
   const limit = Math.min(Number(q.get("limit") || 20), 100);
   const offset = Number(q.get("offset") || 0);
@@ -61,6 +60,15 @@ function serialize(p: any) {
     rate_min: p.rateMin, rate_max: p.rateMax, effective_rate: p.effectiveRate,
     amount_min: p.amountMin, amount_max: p.amountMax, term_min: p.termMin, term_max: p.termMax,
     updated_at: p.updatedAt,
-    bank: { id: p.bank.id, name: p.bank.name, logoText: p.bank.logoText, verified: p.bank.verified, license_no: p.bank.licenseNo },
+    bank: {
+      id: p.bank.id,
+      name: p.bank.name,
+      logoText: p.bank.logoText,
+      verified: p.bank.verified,
+      license_no: p.bank.licenseNo,
+      is_partner: p.bank.isPartner,
+      priority: p.bank.priority,
+      rating: p.bank.rating,
+    },
   };
 }

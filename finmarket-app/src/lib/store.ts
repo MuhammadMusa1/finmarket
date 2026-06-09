@@ -34,14 +34,14 @@ export const DICT: Record<string, Record<string, string>> = {
     filters: "Фильтры", reset: "Сбросить фильтры", bank: "Банк", currency: "Валюта",
     amount: "Сумма", term: "Срок (мес)", rateMax: "Ставка до, %", sort: "Сортировка",
     effRate: "Эфф. ставка", updatedAt: "Актуально на", admin: "Админ",
-    allBanks: "Все банки", chooseCategory: "Выберите категорию продукта",
+    allBanks: "Все банки", partnerSort: "Партнёры сначала", partnerLabel: "Партнёр", chooseCategory: "Выберите категорию продукта",
   },
   tj: {
     catalog: "Каталог", compare: "Муқоиса", apply: "Дархост додан", addCompare: "+ Ба муқоиса",
     filters: "Филтрҳо", reset: "Тоза кардан", bank: "Бонк", currency: "Асъор",
     amount: "Маблағ", term: "Мӯҳлат (моҳ)", rateMax: "Меъёр то, %", sort: "Тартиб",
     effRate: "Меъёри муассир", updatedAt: "Навсозӣ", admin: "Админ",
-    allBanks: "Ҳама бонкҳо", chooseCategory: "Категорияи маҳсулотро интихоб кунед",
+    allBanks: "Ҳама бонкҳо", partnerSort: "Ҳамкорон аввал", partnerLabel: "Ҳамкор", chooseCategory: "Категорияи маҳсулотро интихоб кунед",
   },
 };
 

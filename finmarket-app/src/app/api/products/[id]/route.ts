@@ -12,6 +12,15 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
     status: p.status, updated_at: p.updatedAt,
     fees: JSON.parse(p.feesJson), requirements: JSON.parse(p.requirementsJson),
     attributes: JSON.parse(p.attributesJson),
-    bank: { id: p.bank.id, name: p.bank.name, logoText: p.bank.logoText, verified: p.bank.verified, license_no: p.bank.licenseNo },
+    bank: {
+      id: p.bank.id,
+      name: p.bank.name,
+      logoText: p.bank.logoText,
+      verified: p.bank.verified,
+      license_no: p.bank.licenseNo,
+      is_partner: p.bank.isPartner,
+      priority: p.bank.priority,
+      rating: p.bank.rating,
+    },
   });
 }

@@ -19,8 +19,82 @@ model Bank {
   routingEmail  String?
   webhookSecret String?
   products      Product[]
+  rating        Float?      @default(0)
+  isPartner     Boolean     @default(false)
+  priority      Int         @default(0)
+  contacts      BankContact[]
+  branches      BankBranch[]
+  atms          BankAtm[]
+  news          BankNews[]
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+}
+
+model BankContact {
+  id         String   @id @default(uuid())
+  bankId     String
+  bank       Bank     @relation(fields: [bankId], references: [id])
+  type       String   @default("main") // main | support | mobile
+  address    String?
+  city       String?
+  phone      String?
+  email      String?
+  website    String?
+  telegram   String?
+  whatsapp   String?
+  schedule   String?
+  note       String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model BankBranch {
+  id           String   @id @default(uuid())
+  bankId       String
+  bank         Bank     @relation(fields: [bankId], references: [id])
+  name         String?
+  address      String?
+  city         String?
+  phone        String?
+  latitude     Float?
+  longitude    Float?
+  servicesJson String   @default("{}")
+  status       String   @default("active")
+  note         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model BankAtm {
+  id           String   @id @default(uuid())
+  bankId       String
+  bank         Bank     @relation(fields: [bankId], references: [id])
+  locationName String?
+  address      String?
+  city         String?
+  latitude     Float?
+  longitude    Float?
+  servicesJson String   @default("{}")
+  status       String   @default("active")
+  note         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model BankNews {
+  id          String   @id @default(uuid())
+  bankId      String
+  bank        Bank     @relation(fields: [bankId], references: [id])
+  titleRu     String
+  titleTj     String
+  contentRu   String?
+  contentTj   String?
+  link        String?
+  type        String   @default("news") // news | promo
+  isFeatured  Boolean  @default(false)
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model ProductCategory {

@@ -6,14 +6,14 @@ import { useCompare, useLang, DICT } from "@/lib/store";
 type Product = {
   id: string; name: string; category_code: string; currency: string;
   effective_rate: number | null; amount_max: number | null; term_max: number | null;
-  updated_at: string; bank: { name: string; logoText: string; verified: boolean };
+  updated_at: string; bank: { name: string; logoText: string; verified: boolean; is_partner?: boolean; rating?: number };
 };
 
 export default function CatalogPage({ params }: { params: { category: string } }) {
   const [products, setProducts] = useState<Product[]>([]);
   const [banks, setBanks] = useState<any[]>([]);
   const [catName, setCatName] = useState("");
-  const [filters, setFilters] = useState({ bank: "", currency: "", rate_max: "", sort: "rate_asc" });
+  const [filters, setFilters] = useState({ bank: "", currency: "", rate_max: "", sort: "partner" });
   const [loading, setLoading] = useState(true);
   const { add, remove, ids } = useCompare();
   const { lang } = useLang();
@@ -94,13 +94,14 @@ export default function CatalogPage({ params }: { params: { category: string } }
           <div style={{ marginBottom: 12 }}>
             <label className="label">{DICT[lang].sort}</label>
             <select value={filters.sort} onChange={(e) => setFilters({ ...filters, sort: e.target.value })}>
+              <option value="partner">{DICT[lang].partnerSort}</option>
               <option value="rate_asc">{lang === "ru" ? "Ставка ↑" : "Меъёр ↑"}</option>
               <option value="rate_desc">{lang === "ru" ? "Ставка ↓" : "Меъёр ↓"}</option>
               <option value="amount_desc">{lang === "ru" ? "Сумма ↓" : "Маблағ ↓"}</option>
               <option value="term_desc">{lang === "ru" ? "Срок ↓" : "Мӯҳлат ↓"}</option>
             </select>
           </div>
-          <button className="btn ghost" style={{ width: "100%" }} onClick={() => setFilters({ bank: "", currency: "", rate_max: "", sort: "rate_asc" })}>{DICT[lang].reset}</button>
+          <button className="btn ghost" style={{ width: "100%" }} onClick={() => setFilters({ bank: "", currency: "", rate_max: "", sort: "partner" })}>{DICT[lang].reset}</button>
         </aside>
 
         {/* Список */}
@@ -112,6 +113,8 @@ export default function CatalogPage({ params }: { params: { category: string } }
                   <div style={{ width: 34, height: 34, borderRadius: 8, background: "var(--bg2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "var(--brand)" }}>{p.bank.logoText}</div>
                   <b>{p.bank.name}</b>
                   {p.bank.verified && <span className="badge verified">✓ {lang === "ru" ? "Лицензия" : "Иҷозатнома"}</span>}
+                  {p.bank.is_partner && <span className="badge accent" style={{ marginLeft: 8 }}>{DICT[lang].partnerLabel}</span>}
+                  {typeof p.bank.rating === "number" && p.bank.rating > 0 && <span className="badge" style={{ marginLeft: 8 }}>{p.bank.rating.toFixed(1)}★</span>}
                 </div>
                 <Link href={`/product/${p.id}`}><h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 8 }}>{p.name}</h3></Link>
                 <div style={{ display: "flex", gap: 26, flexWrap: "wrap", margin: "8px 0" }}>

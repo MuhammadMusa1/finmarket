@@ -13,7 +13,7 @@ const CATS = [
 ];
 
 const BANKS = [
-  { name: "Банк Эсхата", logoText: "ЭС", licenseNo: "0012", webhookUrl: "https://webhook.site/demo-eskhata", routingEmail: "leads@eskhata.tj" },
+  { name: "ОАО «Банк Эсхата»", logoText: "ЭС", licenseNo: "0012", verified: true, status: "active", isPartner: true, priority: 100, rating: 4.8, webhookUrl: "https://webhook.site/demo-eskhata", routingEmail: "leads@eskhata.tj" },
   { name: "Амонатбанк", logoText: "АМ", licenseNo: "0001", webhookUrl: null, routingEmail: "leads@amonatbonk.tj" },
   { name: "Спитамен Банк", logoText: "СП", licenseNo: "0024", webhookUrl: "https://webhook.site/demo-spitamen", routingEmail: "leads@spitamen.tj" },
   { name: "Хучандбанк", logoText: "ХБ", licenseNo: "0031", webhookUrl: null, routingEmail: "leads@khujandbank.tj" },
