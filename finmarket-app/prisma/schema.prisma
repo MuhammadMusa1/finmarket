@@ -175,6 +175,17 @@ model AuditLog {
   createdAt  DateTime @default(now())
 }
 
+model ExchangeRate {
+  id        String   @id @default(uuid())
+  code      String   @unique // USD | EUR | RUB
+  nameRu    String
+  nameTj    String
+  nbt       Float    // официальный курс НБТ
+  buy       Float    // покупка (средняя по банкам)
+  sell      Float    // продажа
+  updatedAt DateTime @updatedAt
+}
+
 model IdempotencyKey {
   key         String   @id
   requestHash String
